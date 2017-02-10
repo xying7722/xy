@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>360度旋转</title>
+		<style type="text/css">
+			#shone{
+				width: 400px;
+				height: 250px;
+				border: 5px solid #CCCCCC;
+			}
+			#shone img{
+				width: 266.665px;
+				height: 150px;
+				margin: 50px 70px;
+				-moz-user-select: none;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="shone">
+			<img src="img/image1_1.jpg" alt="鞋子" />
+		</div>
+		
+	</body>
+</html>
+<script src="js/jquery-3.1.1.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+	$('#shone').mousedown(function(event){
+		var fx = 0;
+		var fy = 0;
+		$('#shone').mousemove(function(e){
+			if(fx==0){
+				fx = e.clientX;
+			}else{
+				var index = 1;
+				if((fx-e.clientX) > 20){
+//					console.log(fx-e.clientX);
+					var end = $('#shone img').attr('src').indexOf('.');
+					var now = $('#shone img').attr('src').slice(11,end);
+					index = (parseInt(now)+1) >18?1:(parseInt(now)+1);
+//					console.log((parseInt(now)-1) == 0?18:(parseInt(now)-1));
+					$('#shone img').attr('src','img/image1_'+index+'.jpg');
+					console.log(index);
+					fx = e.clientX;
+					return false;
+				}
+				if((fx-e.clientX) < -20){
+					var end = $('#shone img').attr('src').indexOf('.');
+					var now = $('#shone img').attr('src').slice(11,end);
+					index = (parseInt(now)-1) == 0?18:(parseInt(now)-1);
+					console.log((parseInt(now)-1) == 0?18:(parseInt(now)-1));
+					$('#shone img').attr('src','img/image1_'+index+'.jpg');
+					fx = e.clientX;
+					return false;
+				}
+			}
+			return false;
+		});
+		return false;
+	});
+	$(document).mouseup(function(event){
+		$('#shone').off('mousemove');
+	});
+	$('#shone').mouseout(function(event){
+		$('#shone').off('mousemove');
+	});
+</script>
