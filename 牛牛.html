@@ -1,261 +1,235 @@
 <!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="UTF-8">
-		<title>牛牛计算器</title>
-		<style type="text/css">
-		    body{
-		    	text-align: center;
-		    }
-			body>form>table:nth-of-type(1) div{
-				width: 78.5px;
-				height: 120px;
-				background-image: url(img/pai.jpg);
-				background-size: 1300% 100%;
-				
-			}
-			table{
-				border: 5px double gainsboro;
-				margin: 0 auto;
-			}
-			section{
-				width: 392.5px;
-				height: 120px;
-				border: 5px double gainsboro;
-				margin: 0 auto;
-				background-image: url(img/ts2.png);
-				background-repeat: no-repeat;
-				background-position: center;
-				
-			}
-			section div{
-				width: 78.5px;
-				height: 120px;
-				float: left;
-				background-image: url(img/pai.jpg);
-				box-sizing: border-box;
-			}
-			p,caption{
-				color: red;
-				font-size: 32px;
-			}
-			br{
-				clear: both;
-			}
-			input{
-				color: red;
-				background-color: white;
-			}
-		</style>
-	</head>
-	<body>
-	<form autocomplete="off">
-		
-		<table>
-			<caption>点击下列选取5张牌:</caption>
-			<tr>
-				<td>
-					<div class="num"></div>
-				</td>
-				<td>
-					<div class="num"></div>
-				</td>
-				<td>
-					<div class="num"></div>
-				</td>
-				<td>
-					<div class="num"></div>
-				</td>
-				<td>
-					<div class="num"></div>
-				</td>
-				<td>
-					<div class="num"></div>
-				</td>
-				<td>
-					<div class="num"></div>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<div class="num"></div>
-				</td>
-				<td>
-					<div class="num"></div>
-				</td>
-				<td>
-					<div class="num"></div>
-				</td>
-				<td>
-					<div class="num"></div>
-				</td>
-				<td>
-					<div class="num"></div>
-				</td>
-				<td>
-					<div class="num"></div>
-				</td>
-				<td>
-					 <input type="submit" value="提交计算" onclick="niuniu(event);"/><br />
-					 <input type="reset" value="重新选取" onclick="resetPai(event);"/>
-				</td>
-			</tr>
-		</table>
-		
-		 
-		 <section id="xuanPai">
-		 	 
-		 </section>
-		 <br />
-		 <p id="r"></p>
-	     
-	</form>     
-	</body>
-	<script type="text/javascript">
-	    var paiNum=0;
-	    var div=document.getElementsByClassName("num");
-	    var sec=document.getElementById("xuanPai");
-	    var r=document.getElementById("r");
-	    var flag2=false;
-	    var x=0;
-	    for(var i=0;i<13;i++){
-	    	div[i].index=i;
-	    	div[i].style.backgroundPosition=(-78 * i)+"px 0px";
-	    	div[i].addEventListener('click',divClick);
-	    }
-	    function divClick(){
-            if(paiNum==5){
-            	alert("只能选取5张牌");
-            }else{
-            	var d=document.createElement("div");
-            	d.style=div[this.index].style;
-            	d.text=this.index+1;
-            	d.className='xuanPai2';
-            	d.style.backgroundPosition=(-78.5 * this.index)+"px 0px";
-            	d.addEventListener('click',function(){
-		    		sec.removeChild(d);
-		    		var div2=document.getElementsByClassName("xuanPai2");
-		    		for(var i=0;i<(paiNum==5&&div2.length);i++){
-						div2[i].style.border="none";
-					}
-            	    paiNum--;
-
-		    	});
-            	sec.appendChild(d);
-            	paiNum++;
-            }
-	    }
-	    function resetPai(event){
-	    	var div2=document.getElementsByClassName("xuanPai2");
-	    	while(div2.length!=0){
-				sec.removeChild(div2[0]);
-			}
-	    	r.innerHTML="";
-	    	paiNum=0;
-	    }
-		function niuniu(event){
-			event.preventDefault();
-			r.innerHTML="";
-			var n=new Array();
-			var sum=0;
-			var h=0;
-			var div2=document.getElementsByClassName("xuanPai2");
-			if(paiNum<5){
-				alert("请选取五张牌");
-				return;
-			}
-			if((div2[0].text==div2[1].text)&&(div2[0].text==div2[2].text)&&(div2[0].text==div2[3].text)&&(div2[0].text==div2[4].text)){
-				alert("不能选取五张牌一样的牌");
-				return;
-			}
-			for(var i=0;i<div2.length;i++){
-				n[i]=div2[i].text;
-			}
-			for(var i=0;i<5;i++){
-				sum+=n[i];
-				if(n[i]>10){
-					h++;
-					
-				}
-				if(n[i]<5){
-					x++;
-				}
-			}
-//			alert(x);
-			if(sum<=10&&x==5){
-				r.innerHTML="五小牛";
-				x=0;
-				return;
-			}
-			if(h==5){
-//				alert(h);
-				r.innerHTML="五花牛";
-				h=0;
-				
-				return;
-			}
-			
-			for(var i=0;i<5;i++){
-				for(var j=i+1;j<5;j++){
-					for(var s=j+1;s<5;s++){
-                        if(((n[i]>10?10:n[i])+(n[j]>10?10:n[j])+(n[s]>10?10:n[s]))%10==0){
-                        	r.innerHTML+="{"+n[i]+","+n[j]+","+n[s]+"}";
-                        	var str="01234".replace(i.toString(),"");
-                        	str=str.replace(j.toString(),"");
-                        	str=str.replace(s.toString(),"");
-                        	div2[i].style.border="3px solid red";
-                        	div2[j].style.border="3px solid red";
-                        	div2[s].style.border="3px solid red";
-                            var k=((n[parseInt(str.charAt(1))]>10?10:n[parseInt(str.charAt(1))])+(n[parseInt(str.charAt(0))]>10?10:n[parseInt(str.charAt(0))]))%10;
-                            r.innerHTML+="{"+n[parseInt(str.charAt(0))]+","+n[parseInt(str.charAt(1))]+"}"+"是";
-                            switch(k){
-                                case 0:
-                                	r.innerHTML+="牛牛"+"<br>";
-                                	break;
-                                case 1:
-                                	r.innerHTML+="牛一"+"<br>";
-                                	break;
-                                case 2:
-                                	r.innerHTML+="牛二"+"<br>";
-                                	break;
-                                case 3:
-                                	r.innerHTML+="牛三"+"<br>";
-                                	break;
-                                case 4:
-                                	r.innerHTML+="牛四"+"<br>";
-//                              	document.writeln("牛四");
-                                	break;
-                                case 5:
-									r.innerHTML+="牛五"+"<br>";
-//                              	document.writeln("牛五");
-                                	break;
-                                case 6:
-                                	r.innerHTML+="牛六"+"<br>";
-//                              	document.writeln("牛六");
-                                	break;
-                                case 7:
-                                	r.innerHTML+="牛七"+"<br>";
-//                              	document.writeln("牛七");
-                                	break;
-                                case 8:
-                                	r.innerHTML+="牛八"+"<br>";
-//                              		document.writeln("牛八");
-                                	break;
-                                case 9:
-                                	r.innerHTML+="牛九"+"<br>";
-//                              	document.writeln("牛九");
-                                	break;
-                            }
-                            return;
-                        }
-					}
-				}
-			}
-			if(r.innerHTML==""){
-				r.innerHTML="没牛"+"<br>";
-//				document.writeln("没牛");
-			}
+<html lang="en"><head>
+    <meta charset="utf-8">
+    <title>Swiper demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+    <!-- Link Swiper's CSS -->
+    <link rel="stylesheet" href="css/swiper-3.4.2.min.css">
+    <style>
+    html, body {
+        position: relative;
+        height: 100%;
+    }
+    body {
+        background: #000;
+        font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+        font-size: 14px;
+        color: white;
+        text-align: center;
+        margin: 0;
+        padding: 0;
+    }
+    img{
+    	width: 100% !important;
+    	height: 100% !important;
+    }
+    .swiper-container {
+        width: 100%;
+        height: 300px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .swiper-slide {
+        background-size: cover;
+        background-position: center;
+    }
+    .gallery-top {
+        height: 100%;
+        width: 100%;
+    }
+    .gallery-thumbs {
+    	position: absolute;
+    	bottom: 0;
+        /*height: 20%;*/
+        box-sizing: border-box;
+        padding: 10px 0;
+    }
+    .gallery-thumbs .swiper-slide {
+    	position: relative;
+        width: calc(100% / 6);
+        height: 100%;
+        background-size: 100% 100% !important;
+        padding: 0 5% !important;
+    }
+    
+    .badge{
+		width: 1rem;
+		height: 1rem;
+		position: absolute;
+		bottom: 0.25rem;
+		right: 0.25rem;
+		z-index: 100;
+		border-radius: 50%;
+		background-color: black;
+	}
+    .gallery-thumbs .swiper-slide-active {
+        opacity: 1;
+    }
+    .swiper-button-white{
+    	/*color: #d7b72e !important;*/
+    }
+    #play{
+		position: absolute;
+		right: 15px;
+		top: 0px;
+		width: 2.5rem;
+		height: 2.5rem;
+		border-radius: 50%;
+		background-image: url(images/icon.png);
+		background-size: 200% 100%;
+		background-position: 2.5rem 0;
+		z-index: 10;
 		
 	}
-	</script>
+    /*#thumbnails{
+    	width: 90%;
+    	height: 20vw;
+    	margin-right: 5%;
+    }*/
+    @media screen and (orientation: portrait) {
+		        html{
+					width : 100% ;
+					height : 100% ;
+					background-color: white ;
+					overflow : hidden;
+		        }
+		        body{
+		          width : 100% ;
+		          height : 100% ;
+		          overflow : hidden;
+		        }
+		        /*.gallery-thumbs{
+		        	width: 90%;
+		        	margin: 0 auto;
+		        	/*height: 20rem;*/
+		        /*}*/
+		  
+			} 
+			@media screen and (orientation: landscape) {
+			      html{
+			         width : 100% ;
+			         height : 100% ;
+			      } 
+			       body{
+			         width : 100% ;
+			         height : 100% ;
+			      }
+			      /*.gallery-thumbs{
+			      	width: 90%;
+			      	margin: 0 auto
+			      	height: 20rem;
+			      }*/
+			}
+			.swiper-button-prev{
+				background-image: url(images/left.png);
+				background-size: 200% 100%;
+				background-position: 0 0;
+			}
+			.swiper-button-next{
+				background-image: url(images/left.png);
+				background-size: 200% 100%;
+				background-position: 100% 0;
+			}
+			/*.swiper-button-pre{background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2027%2044'%3E%3Cpath%20d%3D'M0%2C22L22%2C0l2.1%2C2.1L4.2%2C22l19.9%2C19.9L22%2C44L0%2C22L0%2C22L0%2C22z'%20fill%3D'%23007aff'%2F%3E%3C%2Fsvg%3E");*/
+    </style>
+</head>
+<body>
+    <!-- Swiper -->
+    <div id="play"></div>
+    <div class="swiper-container gallery-top swiper-container-horizontal" id="content">
+        <div class="swiper-wrapper" style="transform: translate3d(0px, 0px, 0px); transition-duration: 3ms;">
+        </div>
+        <!-- Add Arrows -->
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev swiper-button-disabled"></div>
+    </div>
+    <!--<div id="thumbnails">-->
+    	
+    
+    <div class="swiper-container gallery-thumbs swiper-container-horizontal" id="thumbs" style="width: calc(100% - 40px);margin:  0 20px;">
+        <div class="swiper-wrapper" style="transform: translate3d(512px, 0px, 0px); transition-duration: 0ms;">
+
+        </div>
+    <!--</div>-->
+	</div>
+    <!-- Swiper JS -->
+    <script src="js/swiper-3.4.2.min.js"></script>
+	<script src="js/jquery.js" type="text/javascript" charset="utf-8"></script>
+    <!-- Initialize Swiper -->
+    <script>
+    init();
+//	初始化li的宽高
+	var thumbsStr = '';
+	var topStr = '';
+	for (var i = 0; i <= 15; i++) {
+		thumbsStr +='<div class="swiper-slide" style="background-image: url(images/thumbs/'+ i + '.jpg); margin-right: 10px;">'
+            	+ '<div class="badge">' + (i+1) + '</div>'
+            + '</div>';
+        if(i==0){
+        	topStr += '<div class="swiper-slide swiper-slide-active" style="background-image: url(images/' + i + '.jpg);background-size: 100% 100%;"></div>';    	
+        }else{
+        	topStr += '<div class="swiper-slide" style="background-image: url(images/'+ i +'.jpg);background-size: 100% 100%;"></div>';
+        }
+        
+        
+	}
+	$('.gallery-top .swiper-wrapper').html(topStr);
+	$('.gallery-thumbs .swiper-wrapper').html(thumbsStr);
+	function init(){
+		var w = document.documentElement.clientWidth / 6;
+		$('.gallery-thumbs').css({
+			height: w / 1.2
+		});
+//		console.log($('.gallery-thumbs .swiper-slide'))
+	}
+	window.onresize = function(){
+		init();
+	}
+	var playFlags = false;
+    var galleryTop = new Swiper('.gallery-top', {
+        nextButton: '.swiper-button-next',
+        prevButton: '.swiper-button-prev',
+        spaceBetween: 10,
+        pagination: '.swiper-pagination',
+        paginationClickable: true,
+        lazyLoading : true,
+        autoplay: 3000,
+        onSlideChangeEnd: function(swiper){
+        	playFlags = true;
+        	$('#play').click();
+        }
+
+    });
+
+    var galleryThumbs = new Swiper('#thumbs', {
+        spaceBetween: 10,
+        centeredSlides: true,
+        paginationClickable: true,
+        slidesPerView: 'auto',
+        touchRatio: 0.2,
+
+    });
+    galleryTop.params.control = galleryThumbs;
+    galleryThumbs.params.control = galleryTop;
+
+////	循环播放
+//	var playFlags = false;
+	$('#play').click(function(){
+		playFlags = !playFlags;
+		
+		if(playFlags){
+			$(this).css('background-position','0 0');
+			galleryThumbs.stopAutoplay();
+			galleryTop.stopAutoplay();
+		}else{
+			galleryTop.startAutoplay();
+			$(this).css('background-position','2.5rem 0');
+			
+		}
+		
+	});
+    </script>
+
+
+</body>
 </html>
